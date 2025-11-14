@@ -3,7 +3,7 @@
 - C14220092 - Amos Gihon
 - C14220063 - Timothy Daud
 
-## Project Set Up
+## Project Setup
 ```bash
 # Install dependencies
 npm install
