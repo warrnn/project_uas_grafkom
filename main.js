@@ -2,70 +2,79 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
+import { degToRad } from 'three/src/math/MathUtils.js';
+import { loadScene1 } from './scenes/scene1';
+import { loadScene2 } from './scenes/scene2';
 
-class ColorGUIHelper {
-    constructor(object, prop) {
-        this.object = object;
-        this.prop = prop;
-    }
-    get value() {
-        return `#${this.object[this.prop].getHexString()}`;
-    }
-    set value(hexString) {
-        this.object[this.prop].set(hexString);
-    }
+let scene, camera, renderer, controls;
+let models = [];
+
+function init() {
+    // Scene
+    scene = new THREE.Scene();
+
+    // Camera
+    const fov = 45;
+    const aspect = window.innerWidth / window.innerHeight;
+    const near = 0.1;
+    const far = 1000;
+    camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    camera.position.set(-20, 40, 100);
+
+    // Renderer
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    document.body.appendChild(renderer.domElement);
+
+    // Controls
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.target.set(0, 0, 0);
+
+    // Models
+    loadModels();
+
+    // Event Listeners
+    window.addEventListener('resize', onWindowResize);
 }
 
-// Scene
-const scene = new THREE.Scene();
+function loadModels() {
+    loadScene1(scene, models);
+    loadScene2(scene, models);
+}
 
-// Camera
-const fov = 45;
-const aspect = 2;
-const near = 0.1;
-const far = 100;
-const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-
-// Renderer
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
-// Controls
-const controls = new OrbitControls(camera, renderer.domElement);
-
-// 3D Model Loader
-const loader = new GLTFLoader();
-
-// GUI Helper
-const gui = new GUI();
-
-loader.load('/characters/michael_de_santa_-_gta_v.glb', function (gltf) {
-    const model = gltf.scene;
-    model.scale.set(1, 1, 1);
-    model.position.set(0, 0, 0);
-    scene.add(model);
-}, undefined, function (error) {
-    console.error(error);
-});
-
-let color = 0xFFFFFF;
-let intensity = 1;
-let light = new THREE.AmbientLight(color, intensity);
-scene.add(light);
-
-color = 0xFFFFFF;
-intensity = 3;
-light = new THREE.DirectionalLight(color, intensity);
-light.position.set(1, 1, 1);
-scene.add(light);
-
-// let helper = new THREE.DirectionalLightHelper(light);
-// scene.add(helper)
-
-camera.position.z = 5;
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+}
 
 function animate() {
+    controls.update();
+
+    if (scene.userData.directionalLightHelper) {
+        scene.userData.directionalLightHelper.update();
+    }
+    if (scene.userData.shadowHelper) {
+        scene.userData.shadowHelper.update();
+    }
+
+    // Scene 1
+    if (models[0]) {
+        models[0].position.z += 0.2;
+        if (models[0].position.z > 70) {
+            models[0].position.z = -20;
+        }
+    }
+
+    // Scene 2
+    // ...
+
     renderer.render(scene, camera);
 }
+
+init();
 renderer.setAnimationLoop(animate);
