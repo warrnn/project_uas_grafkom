@@ -28,7 +28,7 @@ export function loadScene1(scene, models) {
     directionalLight.shadow.mapSize.width = 2048;
     directionalLight.shadow.mapSize.height = 2048;
 
-    directionalLight.shadow.camera.near = 0.1;
+    directionalLight.shadow.camera.near = 160;
     directionalLight.shadow.camera.far = 160;
     directionalLight.shadow.camera.left = -50;
     directionalLight.shadow.camera.right = 50;

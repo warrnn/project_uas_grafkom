@@ -1,9 +1,5 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
-import { degToRad } from 'three/src/math/MathUtils.js';
 import { loadScene1 } from './scenes/scene1';
 import { loadScene2 } from './scenes/scene2';
 
@@ -42,7 +38,10 @@ function init() {
 }
 
 function loadModels() {
-    loadScene1(scene, models);
+    // 00:00 - 00:04
+    // loadScene1(scene, models);
+
+    // 00:05 - 00:08
     loadScene2(scene, models);
 }
 
@@ -52,6 +51,8 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+const clock = new THREE.Clock();
+
 function animate() {
     controls.update();
 
@@ -60,6 +61,13 @@ function animate() {
     }
     if (scene.userData.shadowHelper) {
         scene.userData.shadowHelper.update();
+    }
+
+    const delta = clock.getDelta();
+
+    // Animation
+    if (scene.userData.mixer) {
+        scene.userData.mixer.update(delta);
     }
 
     // Scene 1
