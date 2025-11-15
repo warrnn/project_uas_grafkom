@@ -6,7 +6,7 @@
 ## Making 3D Scene of Grand Theft Auto V: The Official Trailer
 [Grand Theft Auto V: The Official Trailer](https://youtu.be/hvoD7ehZPcM?si=UdCzWd7fA49Pi0El "Grand Theft Auto V: The Official Trailer")
 
-## Project Set Up
+## Project Setup
 ```bash
 # Install dependencies
 npm install
