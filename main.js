@@ -1,12 +1,27 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { loadAnimationScene1, loadScene1 } from './scenes/scene1';
-import { loadAnimationScene2, loadScene2 } from './scenes/scene2';
-import { degToRad } from 'three/src/math/MathUtils.js';
+import { SCENE_LIST } from './scenes/config';
+import { clearScene } from './helpers/functionHelper';
 
 let scene, camera, renderer, controls;
 let models = [];
 let mixers = [];
+let sceneAnimator = null;
+
+function switchScene(sceneID) {
+    clearScene(scene, models, mixers);
+
+    const selected = SCENE_LIST[sceneID];
+    if (!selected) {
+        console.warn(`Scene ${sceneID} tidak ditemukan.`);
+        return;
+    }
+
+    selected.load(scene, models, mixers);
+    sceneAnimator = selected.animate || null;
+
+    console.log(`Switched to Scene ${sceneID}`);
+}
 
 function init() {
     // Scene
@@ -33,18 +48,22 @@ function init() {
     controls.target.set(0, 0, 0);
 
     // Models
-    loadModels();
+    switchScene(1);
 
     // Event Listeners
     window.addEventListener('resize', onWindowResize);
-}
 
-function loadModels() {
-    // 00:00 - 00:04
-    // loadScene1(scene, models);
+    const input = document.getElementById("scene-input");
+    const btn = document.getElementById("scene-btn");
 
-    // 00:05 - 00:08
-    loadScene2(scene, models, mixers);
+    input.max = Object.keys(SCENE_LIST).length;
+
+    btn.addEventListener("click", () => {
+        const id = Number(input.value);
+        if (SCENE_LIST[id]) {
+            switchScene(id);
+        };
+    });
 }
 
 function onWindowResize() {
@@ -74,11 +93,9 @@ function animate() {
         }
     }
 
-    // Scene 1
-    // loadAnimationScene1(models);
-
-    // Scene 2
-    loadAnimationScene2(models);
+    if (sceneAnimator) {
+        sceneAnimator(models, mixers, delta);
+    }
 
     renderer.render(scene, camera);
 }

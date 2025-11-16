@@ -9,10 +9,50 @@
         body {
             margin: 0;
         }
+
+        #scene-switcher {
+            position: fixed;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 8px;
+            display: flex;
+            gap: 8px;
+            z-index: 999;
+        }
+
+        #scene-switcher label {
+            color: white;
+        }
+
+        #scene-switcher input {
+            width: 50px;
+        }
+
+        #scene-switcher input,
+        #scene-switcher button {
+            padding: 4px;
+            font-size: 14px;
+        }
+
+        #scene-switcher button {
+            cursor: pointer;
+        }
     </style>
 </head>
 
 <body>
+    <div id="scene-switcher">
+        <label for="scene-input">Scene:</label>
+        <input type="number" id="scene-input" min="1" value="1" />
+        <button type="button" id="scene-btn">Click 3X</button>
+    </div>
+
     <script type="module" src="/main.js"></script>
 </body>
 

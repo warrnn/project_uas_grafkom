@@ -5,10 +5,10 @@ import { enableShadows, onError } from '../helpers/functionHelper';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { ColorGUIHelper } from '../helpers/classHelper';
 
-const loader = new GLTFLoader();
-const gui = new GUI();
-
 export function loadScene1(scene, models) {
+    const loader = new GLTFLoader();
+    const gui = new GUI();
+
     // Background
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load('/backgrounds/your_image.jpg', (texture) => {
@@ -21,14 +21,14 @@ export function loadScene1(scene, models) {
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
-    directionalLight.position.set(-10, 10, -50);
+    directionalLight.position.set(11, 13.6, -38.7);
     directionalLight.castShadow = true;
     scene.add(directionalLight);
 
     directionalLight.shadow.mapSize.width = 2048;
     directionalLight.shadow.mapSize.height = 2048;
 
-    directionalLight.shadow.camera.near = 160;
+    directionalLight.shadow.camera.near = -160;
     directionalLight.shadow.camera.far = 160;
     directionalLight.shadow.camera.left = -50;
     directionalLight.shadow.camera.right = 50;
@@ -175,7 +175,7 @@ export function loadScene1(scene, models) {
         scene.add(model);
     }, undefined, onError);
 
-    loader.load('/environment/subway_train.glb', (gltf) => {
+    loader.load('/things/subway_train.glb', (gltf) => {
         const model = gltf.scene;
         model.scale.set(80, 80, 80);
         model.position.set(-12.5, 7, -20);
@@ -183,6 +183,15 @@ export function loadScene1(scene, models) {
         enableShadows(model);
         scene.add(model);
         models.push(model);
+    }, undefined, onError);
+
+    loader.load('/environment/lowpoly_urban_building.glb', (gltf) => {
+        const model = gltf.scene;
+        model.scale.set(2, 2, 2);
+        model.position.set(-35, 0, 40);
+        model.rotation.y = degToRad(180);
+        enableShadows(model);
+        scene.add(model);
     }, undefined, onError);
 }
 

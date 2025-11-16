@@ -5,10 +5,10 @@ import { enableShadows, onError } from '../helpers/functionHelper';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { ColorGUIHelper } from '../helpers/classHelper';
 
-const loader = new GLTFLoader();
-const gui = new GUI();
-
 export function loadScene2(scene, models, mixers) {
+    const loader = new GLTFLoader();
+    const gui = new GUI();
+
     // Background
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load('/backgrounds/drakensberg_solitary_mountain_puresky_2k.jpg', (texture) => {
@@ -67,18 +67,25 @@ export function loadScene2(scene, models, mixers) {
     loader.load('/environment/animated_roller_coaster.glb', (gltf) => {
         const model = gltf.scene;
         model.scale.set(1.2, 1.2, 1.2);
-        model.position.set(-160, 0, 80);
-        model.rotation.x = degToRad(-0.1);
+        model.position.set(-120, 1, 40);
+        model.rotation.x = degToRad(-2);
         model.rotation.y = degToRad(180);
-        enableShadows(model);
+        model.rotation.z = degToRad(1);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.material = new THREE.MeshStandardMaterial({
+                    color: "#ffffff",
+                    metalness: 1.0,
+                    roughness: 0.3
+                });
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
         scene.add(model);
         const mixer = new THREE.AnimationMixer(model);
-        console.log(gltf.animations);
         const clip = THREE.AnimationClip.findByName(gltf.animations, "Scene");
-        if (clip) {
-            const action = mixer.clipAction(clip);
-            action.play();
-        }
+        if (clip) mixer.clipAction(clip).play();
         mixers.push(mixer);
     }, undefined, onError);
 
@@ -100,6 +107,16 @@ export function loadScene2(scene, models, mixers) {
         parent.add(model);
         parent.scale.set(2, 2, 2);
         parent.position.set(0, -2.5, 0);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                if (child.material) {
+                    child.material.color.multiplyScalar(0.1);
+                    child.material.needsUpdate = true;
+                }
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
         enableShadows(model);
         scene.add(parent);
         models.push(parent);
