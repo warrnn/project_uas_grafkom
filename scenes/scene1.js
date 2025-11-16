@@ -185,3 +185,13 @@ export function loadScene1(scene, models) {
         models.push(model);
     }, undefined, onError);
 }
+
+export function loadAnimationScene1(models) {
+    const train = models[0];
+    if (train) {
+        train.position.z += 0.2;
+        if (train.position.z > 70) {
+            train.position.z = -20;
+        }
+    }
+}

@@ -8,7 +8,7 @@ import { ColorGUIHelper } from '../helpers/classHelper';
 const loader = new GLTFLoader();
 const gui = new GUI();
 
-export function loadScene2(scene, models) {
+export function loadScene2(scene, models, mixers) {
     // Background
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load('/backgrounds/drakensberg_solitary_mountain_puresky_2k.jpg', (texture) => {
@@ -65,7 +65,6 @@ export function loadScene2(scene, models) {
     }, undefined, onError);
 
     loader.load('/environment/animated_roller_coaster.glb', (gltf) => {
-        console.log(gltf.animations);
         const model = gltf.scene;
         model.scale.set(1.2, 1.2, 1.2);
         model.position.set(-160, 0, 80);
@@ -74,11 +73,84 @@ export function loadScene2(scene, models) {
         enableShadows(model);
         scene.add(model);
         const mixer = new THREE.AnimationMixer(model);
+        console.log(gltf.animations);
         const clip = THREE.AnimationClip.findByName(gltf.animations, "Scene");
         if (clip) {
             const action = mixer.clipAction(clip);
             action.play();
         }
-        scene.userData.mixer = mixer;
+        mixers.push(mixer);
     }, undefined, onError);
+
+    loader.load('/things/generic_sedan_car.glb', (gltf) => {
+        const model = gltf.scene;
+        model.scale.set(3, 3, 3);
+        model.position.set(10, -3.3, -10);
+        model.rotation.x = degToRad(-1);
+        model.rotation.y = degToRad(180);
+        enableShadows(model);
+        scene.add(model);
+        models.push(model);
+    }, undefined, onError);
+
+    loader.load('/characters/6e604109b07b4c789776535a8beabf0b.glb', (gltf) => {
+        const model = gltf.scene;
+        model.scale.set(2, 2, 2);
+        const parent = new THREE.Group();
+        parent.add(model);
+        parent.scale.set(2, 2, 2);
+        parent.position.set(0, -2.5, 0);
+        enableShadows(model);
+        scene.add(parent);
+        models.push(parent);
+        const mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(gltf.animations, "Take 001");
+        if (clip) {
+            const action = mixer.clipAction(clip);
+            action.setLoop(THREE.LoopRepeat);
+            action.play();
+        }
+        mixers.push(mixer);
+    }, undefined, onError);
+
+    loader.load('/characters/unarmed_walk_forward_2.glb', (gltf) => {
+        const model = gltf.scene;
+        model.scale.set(1, 1, 1);
+        const parent = new THREE.Group();
+        parent.add(model);
+        parent.scale.set(2, 2, 2);
+        parent.position.set(0, -2.5, -5);
+        enableShadows(model);
+        scene.add(parent);
+        models.push(parent);
+        const mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(gltf.animations, "mixamo.com");
+        if (clip) {
+            const action = mixer.clipAction(clip);
+            action.setLoop(THREE.LoopRepeat);
+            action.play();
+        }
+        mixers.push(mixer);
+    }, undefined, onError);
+}
+
+export function loadAnimationScene2(models) {
+    const car = models[0];
+    const walking_man_1 = models[1];
+    const walking_man_2 = models[2];
+    if (car && walking_man_1 && walking_man_2) {
+        car.position.y += 0.006;
+        car.position.z += 0.2;
+        car.rotation.x -= 0.000009;
+        walking_man_1.position.y += 0.002;
+        walking_man_1.position.z += 0.1;
+        walking_man_2.position.y += 0.002;
+        walking_man_2.position.z += 0.1;
+        if (car.position.z > 70) {
+            car.position.set(10, -3.3, -10);
+            car.rotation.x = degToRad(-1);
+            walking_man_1.position.set(0, -2.5, 0);
+            walking_man_2.position.set(0, -2.5, -5);
+        }
+    }
 }

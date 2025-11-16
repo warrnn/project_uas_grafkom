@@ -1,10 +1,12 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { loadScene1 } from './scenes/scene1';
-import { loadScene2 } from './scenes/scene2';
+import { loadAnimationScene1, loadScene1 } from './scenes/scene1';
+import { loadAnimationScene2, loadScene2 } from './scenes/scene2';
+import { degToRad } from 'three/src/math/MathUtils.js';
 
 let scene, camera, renderer, controls;
 let models = [];
+let mixers = [];
 
 function init() {
     // Scene
@@ -42,7 +44,7 @@ function loadModels() {
     // loadScene1(scene, models);
 
     // 00:05 - 00:08
-    loadScene2(scene, models);
+    loadScene2(scene, models, mixers);
 }
 
 function onWindowResize() {
@@ -66,20 +68,17 @@ function animate() {
     const delta = clock.getDelta();
 
     // Animation
-    if (scene.userData.mixer) {
-        scene.userData.mixer.update(delta);
-    }
-
-    // Scene 1
-    if (models[0]) {
-        models[0].position.z += 0.2;
-        if (models[0].position.z > 70) {
-            models[0].position.z = -20;
+    if (mixers.length > 0) {
+        for (let i = 0; i < mixers.length; i++) {
+            mixers[i].update(delta);
         }
     }
 
+    // Scene 1
+    // loadAnimationScene1(models);
+
     // Scene 2
-    // ...
+    loadAnimationScene2(models);
 
     renderer.render(scene, camera);
 }
