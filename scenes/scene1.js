@@ -11,7 +11,7 @@ export function loadScene1(scene, models) {
 
     // Background
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load('/backgrounds/your_image.jpg', (texture) => {
+    textureLoader.load('/backgrounds/360_F_503505789_e7okWfPma6HULxdwehiqSjhKMR1dhkyj.jpg', (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         scene.background = texture;
     });
@@ -37,7 +37,7 @@ export function loadScene1(scene, models) {
 
     const dirHelper = new THREE.DirectionalLightHelper(directionalLight);
     const shadowHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
-    scene.add(dirHelper, shadowHelper);
+    // scene.add(dirHelper, shadowHelper);
 
     scene.userData.directionalLightHelper = dirHelper;
     scene.userData.shadowHelper = shadowHelper;
