@@ -9,14 +9,14 @@ export function loadScene3(scene, models, mixers) {
     const loader = new GLTFLoader();
     const gui = new GUI();
 
-    // Background
+    /* Background */
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load('/backgrounds/drakensberg_solitary_mountain_puresky_2k.jpg', (texture) => {
+    textureLoader.load('/backgrounds/bg_scene_3.jpg', (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         scene.background = texture;
     });
 
-    // Lights
+    /* Lights */
     const ambientLight = new THREE.AmbientLight("#e2bf60", 2);
     scene.add(ambientLight);
 
@@ -74,7 +74,7 @@ export function loadScene3(scene, models, mixers) {
     pointFolder2.add(carPointLight2.position, "y", -100, 100, 0.1);
     pointFolder2.add(carPointLight2.position, "z", -100, 100, 0.1);
 
-    // 3D Object Loads
+    /* 3D Object Loads */
     loader.load('/environment/city.glb', (gltf) => {
         const model = gltf.scene;
         model.scale.set(2, 2, 2);
@@ -113,7 +113,7 @@ export function loadScene3(scene, models, mixers) {
     }, undefined, onError);
 }
 
-export function loadAnimationScene3(models) {
+export function loadAnimationScene3(models, scene) {
     if (models.length < 2) return;
     const main_car = models[0];
     const other_car1 = models[1];

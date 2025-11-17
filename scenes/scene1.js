@@ -9,14 +9,14 @@ export function loadScene1(scene, models) {
     const loader = new GLTFLoader();
     const gui = new GUI();
 
-    // Background
+    /* Background */
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load('/backgrounds/360_F_503505789_e7okWfPma6HULxdwehiqSjhKMR1dhkyj.jpg', (texture) => {
+    textureLoader.load('/backgrounds/bg_scene_1.jpg', (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         scene.background = texture;
     });
 
-    // Lights
+    /* Lights */
     const ambientLight = new THREE.AmbientLight("#fec96c", 1);
     scene.add(ambientLight);
 
@@ -55,7 +55,7 @@ export function loadScene1(scene, models) {
     dirFolder.add(directionalLight.position, "y", -100, 100, 0.1);
     dirFolder.add(directionalLight.position, "z", -100, 100, 0.1);
 
-    // 3D Object Loads
+    /* 3D Object Loads */
     const planeGeometry = new THREE.PlaneGeometry(1000, 1000);
     const planeMaterial = new THREE.MeshStandardMaterial({
         color: 0xcccccc,
@@ -195,7 +195,7 @@ export function loadScene1(scene, models) {
     }, undefined, onError);
 }
 
-export function loadAnimationScene1(models) {
+export function loadAnimationScene1(models, scene) {
     const train = models[0];
     if (train) {
         train.position.z += 0.2;

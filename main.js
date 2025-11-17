@@ -24,33 +24,33 @@ function switchScene(sceneID) {
 }
 
 function init() {
-    // Scene
+    /* Scene */
     scene = new THREE.Scene();
 
-    // Camera
+    /* Camera */
     const fov = 45;
     const aspect = window.innerWidth / window.innerHeight;
     const near = 0.1;
-    const far = 1000;
+    const far = 5000;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(-20, 40, 100);
+    camera.position.set(-201.85757313695032, 62.89126750713628, -329.1259640917149);
 
-    // Renderer
+    /* Renderer */
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     document.body.appendChild(renderer.domElement);
 
-    // Controls
+    /* Controls */
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.target.set(0, 0, 0);
 
-    // Models
+    /* Models */
     switchScene(1);
 
-    // Event Listeners
+    /* Event Listeners */
     window.addEventListener('resize', onWindowResize);
 
     const input = document.getElementById("scene-input");
@@ -73,9 +73,18 @@ function onWindowResize() {
 }
 
 const clock = new THREE.Clock();
+let lastLog = 0;
 
 function animate() {
     controls.update();
+
+    const delta = clock.getDelta();
+
+    lastLog += delta;
+    if (lastLog >= 1) {
+        console.log(camera.position);
+        lastLog = 0;
+    }
 
     if (scene.userData.directionalLightHelper) {
         scene.userData.directionalLightHelper.update();
@@ -84,9 +93,7 @@ function animate() {
         scene.userData.shadowHelper.update();
     }
 
-    const delta = clock.getDelta();
-
-    // Animation
+    /* Animation */
     if (mixers.length > 0) {
         for (let i = 0; i < mixers.length; i++) {
             mixers[i].update(delta);
@@ -94,7 +101,7 @@ function animate() {
     }
 
     if (sceneAnimator) {
-        sceneAnimator(models, mixers, delta);
+        sceneAnimator(models, scene);
     }
 
     renderer.render(scene, camera);

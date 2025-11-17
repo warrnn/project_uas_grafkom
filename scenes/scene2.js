@@ -9,14 +9,14 @@ export function loadScene2(scene, models, mixers) {
     const loader = new GLTFLoader();
     const gui = new GUI();
 
-    // Background
+    /* Background */
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load('/backgrounds/drakensberg_solitary_mountain_puresky_2k.jpg', (texture) => {
+    textureLoader.load('/backgrounds/bg_scene_2.jpg', (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         scene.background = texture;
     });
 
-    // Lights
+    /* Lights */
     const ambientLight = new THREE.AmbientLight("#ffffff", 1);
     scene.add(ambientLight);
 
@@ -55,7 +55,7 @@ export function loadScene2(scene, models, mixers) {
     dirFolder.add(directionalLight.position, "y", -100, 100, 0.1);
     dirFolder.add(directionalLight.position, "z", -100, 100, 0.1);
 
-    // 3D Object Loads
+    /* 3D Object Loads */
     loader.load('/environment/american_road.glb', (gltf) => {
         const model = gltf.scene;
         model.scale.set(0.1, 0.1, 0.1);
@@ -110,7 +110,7 @@ export function loadScene2(scene, models, mixers) {
         model.traverse((child) => {
             if (child.isMesh) {
                 if (child.material) {
-                    child.material.color.multiplyScalar(0.1);
+                    child.material.color.multiplyScalar(0.6);
                     child.material.needsUpdate = true;
                 }
                 child.castShadow = true;
@@ -137,6 +137,16 @@ export function loadScene2(scene, models, mixers) {
         parent.add(model);
         parent.scale.set(2, 2, 2);
         parent.position.set(0, -2.5, -5);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                if (child.material) {
+                    child.material.color.multiplyScalar(0.4);
+                    child.material.needsUpdate = true;
+                }
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
+        });
         enableShadows(model);
         scene.add(parent);
         models.push(parent);
@@ -151,7 +161,7 @@ export function loadScene2(scene, models, mixers) {
     }, undefined, onError);
 }
 
-export function loadAnimationScene2(models) {
+export function loadAnimationScene2(models, scene) {
     const car = models[0];
     const walking_man_1 = models[1];
     const walking_man_2 = models[2];
