@@ -11,7 +11,7 @@ export function loadScene8(scene, models, mixers) {
 
     /* Background */
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load('/backgrounds/bg_scene_6.jpg', (texture) => {
+    textureLoader.load('/backgrounds/bg_scene_5.jpg', (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         scene.background = texture;
     });
