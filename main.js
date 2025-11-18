@@ -26,6 +26,12 @@ function switchScene(sceneID) {
 function init() {
     /* Scene */
     scene = new THREE.Scene();
+    {
+        const color = 0xFFFFFF;
+        const near = 0.1;
+        const far = 1000;
+        scene.fog = new THREE.Fog(color, near, far);
+    }
 
     /* Camera */
     const fov = 45;
@@ -55,10 +61,22 @@ function init() {
 
     const input = document.getElementById("scene-input");
     const btn = document.getElementById("scene-btn");
+    let sceneBtnClicked = 0;
 
     input.max = Object.keys(SCENE_LIST).length;
 
     btn.addEventListener("click", () => {
+        if (sceneBtnClicked == 0) {
+            sceneBtnClicked++;
+            btn.innerText = "Click 2 More Times";
+        } else if (sceneBtnClicked == 1) {
+            sceneBtnClicked++;
+            btn.innerText = "Click 1 More Time";
+        } else if (sceneBtnClicked == 2) {
+            sceneBtnClicked++;
+            btn.innerText = "Click 3 More Times";
+            sceneBtnClicked = 0;
+        }
         const id = Number(input.value);
         if (SCENE_LIST[id]) {
             switchScene(id);
