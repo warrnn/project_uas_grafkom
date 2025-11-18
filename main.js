@@ -33,7 +33,7 @@ function init() {
     const near = 0.1;
     const far = 5000;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(-55.48022028096641, 20.854995494819597, 139.53465471643233);
+    camera.position.set(0, 84.10459123766272, 316.2332620007179);
 
     /* Renderer */
     renderer = new THREE.WebGLRenderer({ antialias: true });
