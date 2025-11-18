@@ -5,9 +5,36 @@ import { enableShadows, onError } from '../helpers/functionHelper';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { ColorGUIHelper } from '../helpers/classHelper';
 
-export function loadScene2(scene, models, mixers) {
+const initCameraPosition = {
+    x: 27.907501862878796,
+    y: 1.099841656890988,
+    z: 21.36178948596198
+}
+const initControlTarget = {
+    x: -4.824072559294392,
+    y: 4.424200255292551,
+    z: 2.8807156746627407
+}
+
+export function loadScene2(scene, models, mixers, camera, controls) {
     const loader = new GLTFLoader();
     const gui = new GUI();
+
+    /* Fog */
+    const fogNear = 0.1;
+    const fogFar = 1000;
+    scene.fog = new THREE.Fog("rgba(255, 255, 255, 1)", fogNear, fogFar);
+
+    /* Camera */
+    camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
+
+    /* Controls */
+    controls.target.set(initControlTarget.x, initControlTarget.y, initControlTarget.z);
+
+    controls.minDistance = 0.1;
+    controls.maxDistance = 100;
+    controls.enablePan = true;
+    controls.update();
 
     /* Background */
     const textureLoader = new THREE.TextureLoader();
@@ -161,7 +188,7 @@ export function loadScene2(scene, models, mixers) {
     }, undefined, onError);
 }
 
-export function loadAnimationScene2(models, scene) {
+export function loadAnimationScene2(models, scene, camera, controls, delta) {
     const car = models[0];
     const walking_man_1 = models[1];
     const walking_man_2 = models[2];
@@ -173,11 +200,15 @@ export function loadAnimationScene2(models, scene) {
         walking_man_1.position.z += 0.1;
         walking_man_2.position.y += 0.002;
         walking_man_2.position.z += 0.1;
+        camera.position.z += 0.1;
+        controls.target.z += 0.1;
         if (car.position.z > 70) {
             car.position.set(10, -3.3, -10);
             car.rotation.x = degToRad(-1);
             walking_man_1.position.set(0, -2.5, 0);
             walking_man_2.position.set(0, -2.5, -5);
+            camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
+            controls.target.set(initControlTarget.x, initControlTarget.y, initControlTarget.z);
         }
     }
 }

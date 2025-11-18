@@ -5,9 +5,35 @@ import { enableShadows, onError } from '../helpers/functionHelper';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { ColorGUIHelper } from '../helpers/classHelper';
 
-export function loadScene3(scene, models, mixers) {
+const initCameraPosition = {
+    x: -49.76022742204525,
+    y: 2.8845949486001903,
+    z: 8.502949127989309
+}
+const initControlTarget = {
+    x: -4.141824940559374,
+    y: -0.9297525235848677,
+    z: -12.64832147434104
+}
+
+export function loadScene3(scene, models, mixers, camera, controls) {
     const loader = new GLTFLoader();
     const gui = new GUI();
+
+    /* Fog */
+    const fogNear = 0.1;
+    const fogFar = 1000;
+    scene.fog = new THREE.Fog("rgba(255, 255, 255, 1)", fogNear, fogFar);
+
+    /* Camera */
+    camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
+
+    /* Controls */
+    controls.target.set(initControlTarget.x, initControlTarget.y, initControlTarget.z);
+    controls.minDistance = 0.1;
+    controls.maxDistance = 100;
+    controls.enablePan = true;
+    controls.update();
 
     /* Background */
     const textureLoader = new THREE.TextureLoader();
@@ -113,16 +139,18 @@ export function loadScene3(scene, models, mixers) {
     }, undefined, onError);
 }
 
-export function loadAnimationScene3(models, scene) {
+export function loadAnimationScene3(models, scene, camera, controls, delta) {
     if (models.length < 2) return;
     const main_car = models[0];
     const other_car1 = models[1];
     if (main_car && other_car1) {
-        main_car.position.x -= 0.1;
-        other_car1.position.z += 0.05;
+        main_car.position.x -= 0.07;
+        other_car1.position.z += 0.03;
+        camera.position.z -= 0.025;
         if (main_car.position.x < -50) {
             main_car.position.x = -20;
             other_car1.position.z = -10;
+            camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
         }
     }
 }

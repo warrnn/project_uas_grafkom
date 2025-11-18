@@ -5,9 +5,35 @@ import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { ColorGUIHelper } from '../helpers/classHelper';
 import { degToRad } from 'three/src/math/MathUtils.js';
 
-export function loadScene6(scene, models, mixers) {
+const initCameraPosition = {
+    x: -171.50909031672361,
+    y: 30.128531322350725,
+    z: -121.67721797933316
+}
+const initControlTarget = {
+    x: 34.984055177969516,
+    y: 109.42899991012222,
+    z: -59.57485767000415
+}
+
+export function loadScene6(scene, models, mixers, camera, controls) {
     const loader = new GLTFLoader();
     const gui = new GUI();
+
+    /* Fog */
+    const fogNear = 0.1;
+    const fogFar = 2000;
+    scene.fog = new THREE.Fog("rgba(255, 255, 255, 1)", fogNear, fogFar);
+
+    /* Camera */
+    camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
+
+    /* Controls */
+    controls.target.set(initControlTarget.x, initControlTarget.y, initControlTarget.z);
+    controls.minDistance = 0.1;
+    controls.maxDistance = 2000;
+    controls.enablePan = true;
+    controls.update();
 
     /* Background */
     const textureLoader = new THREE.TextureLoader();
@@ -17,11 +43,11 @@ export function loadScene6(scene, models, mixers) {
     });
 
     /* Lights */
-    const ambientLight = new THREE.AmbientLight("rgba(255, 255, 255, 1)", 1);
+    const ambientLight = new THREE.AmbientLight("rgba(255, 255, 255, 1)", 0.5);
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-    directionalLight.position.set(-100, 13.9, 79.1);
+    directionalLight.position.set(-100, -22.7, 100);
     directionalLight.castShadow = true;
     scene.add(directionalLight);
 
@@ -79,6 +105,53 @@ export function loadScene6(scene, models, mixers) {
     }, undefined, onError);
 }
 
-export function loadAnimationScene6(models, scene) {
+export function loadAnimationScene6(models, scene, camera, controls, delta) {
+    const center = new THREE.Vector3(0, 110, 0);
 
+    const zoomSpeed = 15 * delta;
+    const rotationSpeed = 0.8 * delta;
+
+    let currentRadius = Math.sqrt(
+        Math.pow(camera.position.x - center.x, 2) +
+        Math.pow(camera.position.z - center.z, 2)
+    );
+
+    let currentAngle = Math.atan2(
+        camera.position.x - center.x,
+        camera.position.z - center.z
+    );
+
+    if (camera.userData.totalRotation === undefined) camera.userData.totalRotation = 0;
+
+    const maxRotation = Math.PI * 2;
+
+    if (Math.abs(camera.userData.totalRotation) < maxRotation) {
+
+        // Zoom In
+        if (currentRadius > 20) {
+            currentRadius -= zoomSpeed;
+        }
+
+        // Rotate Orbit
+        const angleIncrement = rotationSpeed;
+        currentAngle += angleIncrement;
+        camera.userData.totalRotation += angleIncrement;
+
+        camera.position.x = center.x + currentRadius * Math.sin(currentAngle);
+        camera.position.z = center.z + currentRadius * Math.cos(currentAngle);
+
+        camera.lookAt(center);
+
+    } else {
+        // Reset ke awal
+        camera.userData.totalRotation = 0;
+
+        if (typeof initCameraPosition !== 'undefined') {
+            camera.position.copy(initCameraPosition);
+        } else {
+            camera.position.set(0, 20, 100);
+        }
+
+        camera.lookAt(center);
+    }
 }

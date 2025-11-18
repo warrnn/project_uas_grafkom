@@ -5,9 +5,35 @@ import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { ColorGUIHelper } from '../helpers/classHelper';
 import { degToRad } from 'three/src/math/MathUtils.js';
 
-export function loadScene4(scene, models, mixers) {
+const initCameraPosition = {
+    x: -20.801006437377254,
+    y: 84.60254853380415,
+    z: -328.0826228396485
+}
+const initControlTarget = {
+    x: 129.5279153478934,
+    y: 102.89663320426607,
+    z: -253.32113793564326
+}
+
+export function loadScene4(scene, models, mixers, camera, controls) {
     const loader = new GLTFLoader();
     const gui = new GUI();
+
+    /* Fog */
+    const fogNear = 0.1;
+    const fogFar = 2000;
+    scene.fog = new THREE.Fog("rgba(92, 92, 92, 1)", fogNear, fogFar);
+
+    /* Camera */
+    camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
+
+    /* Controls */
+    controls.target.set(initControlTarget.x, initControlTarget.y, initControlTarget.z);
+    controls.minDistance = 0.1;
+    controls.maxDistance = 1000;
+    controls.enablePan = true;
+    controls.update();
 
     /* Background */
     const textureLoader = new THREE.TextureLoader();
@@ -226,14 +252,22 @@ export function loadScene4(scene, models, mixers) {
     }, undefined, onError);
 }
 
-export function loadAnimationScene4(models, scene) {
+export function loadAnimationScene4(models, scene, camera, controls, delta) {
     const path = scene.userData.birdPath;
     const parent = scene.userData.birdParent;
 
     if (!path || !parent) return;
 
     scene.userData.birdProgress += 0.004;
-    if (scene.userData.birdProgress > 1) scene.userData.birdProgress = 0;
+    camera.position.x += 0.3;
+    camera.position.y += 0.3;
+    controls.target.x += 0.3;
+    controls.target.y += 0.2;
+    if (scene.userData.birdProgress > 1) {
+        scene.userData.birdProgress = 0;
+        camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
+        controls.target.set(initControlTarget.x, initControlTarget.y, initControlTarget.z);
+    }
 
     const t = scene.userData.birdProgress;
 

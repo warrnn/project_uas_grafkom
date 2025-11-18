@@ -2,12 +2,49 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { enableShadows, onError } from '../helpers/functionHelper';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
-import { ColorGUIHelper } from '../helpers/classHelper';
+import { ColorGUIHelper, FogGUIHelper } from '../helpers/classHelper';
 import { degToRad } from 'three/src/math/MathUtils.js';
 
-export function loadScene9(scene, models, mixers) {
+const initCameraPosition = {
+    x: -104.58017853321374,
+    y: 70.4597582949414,
+    z: 139.12282531625027
+}
+const initControlTarget = {
+    x: -16.139746220212395,
+    y: 122.26380292087225,
+    z: 4.8940326643477166
+}
+
+const initDirectionalLightPosition = {
+    x: -20,
+    y: -50,
+    z: 100
+}
+
+export function loadScene9(scene, models, mixers, camera, controls) {
     const loader = new GLTFLoader();
     const gui = new GUI();
+
+    /* Fog */
+    const fogNear = 0.1;
+    const fogFar = 600;
+    const fogColor = new THREE.Color("rgba(153, 153, 153, 1)");
+    scene.fog = new THREE.Fog(fogColor, fogNear, fogFar);
+    const fogGUIHelper = new FogGUIHelper(scene.fog);
+    const fogFolder = gui.addFolder('Fog');
+    fogFolder.add(fogGUIHelper, 'near', fogNear, 1000).listen();
+    fogFolder.add(fogGUIHelper, 'far', fogNear, 1000).listen();
+    
+    /* Camera */
+    camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
+
+    /* Controls */
+    controls.target.set(initControlTarget.x, initControlTarget.y, initControlTarget.z);
+    controls.minDistance = 0.1;
+    controls.maxDistance = 2000;
+    controls.enablePan = true;
+    controls.update();
 
     /* Background */
     const textureLoader = new THREE.TextureLoader();
@@ -21,9 +58,10 @@ export function loadScene9(scene, models, mixers) {
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-    directionalLight.position.set(58.2, 100, -100);
+    directionalLight.position.set(initDirectionalLightPosition.x, initDirectionalLightPosition.y, initDirectionalLightPosition.z);
     directionalLight.castShadow = true;
     scene.add(directionalLight);
+    scene.userData.directionalLight = directionalLight;
 
     directionalLight.shadow.mapSize.width = 2048;
     directionalLight.shadow.mapSize.height = 2048;
@@ -113,6 +151,12 @@ export function loadScene9(scene, models, mixers) {
     }, undefined, onError);
 }
 
-export function loadAnimationScene9(models, scene) {
+export function loadAnimationScene9(models, scene, camera, controls, delta) {
+    const directionalLight = scene.userData.directionalLight;
 
+    directionalLight.position.y += 0.2;
+
+    if (directionalLight.position.y > 100) {
+        directionalLight.position.set(initDirectionalLightPosition.x, initDirectionalLightPosition.y, initDirectionalLightPosition.z);
+    }
 }

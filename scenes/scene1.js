@@ -5,9 +5,36 @@ import { enableShadows, onError } from '../helpers/functionHelper';
 import { GUI } from 'three/examples/jsm/libs/lil-gui.module.min.js';
 import { ColorGUIHelper } from '../helpers/classHelper';
 
-export function loadScene1(scene, models) {
+const initCameraPosition = {
+    x: -23.491297320183058,
+    y: 6.784044547084277,
+    z: 41.42684213592841
+}
+const initControlTarget = {
+    x: -14.60249859051821,
+    y: 11.594662275588785,
+    z: 0.3120497391560467
+}
+
+export function loadScene1(scene, models, mixers, camera, controls) {
     const loader = new GLTFLoader();
     const gui = new GUI();
+
+    /* Fog */
+    const fogNear = 0.1;
+    const fogFar = 1000;
+    scene.fog = new THREE.Fog("rgba(255, 255, 255, 1)", fogNear, fogFar);
+
+    /* Camera */
+    camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
+
+    /* Controls */
+    controls.target.set(initControlTarget.x, initControlTarget.y, initControlTarget.z);
+
+    controls.minDistance = 0.1;
+    controls.maxDistance = 100;
+    controls.enablePan = true;
+    controls.update();
 
     /* Background */
     const textureLoader = new THREE.TextureLoader();
@@ -195,12 +222,16 @@ export function loadScene1(scene, models) {
     }, undefined, onError);
 }
 
-export function loadAnimationScene1(models, scene) {
+export function loadAnimationScene1(models, scene, camera, controls, delta) {
     const train = models[0];
     if (train) {
         train.position.z += 0.2;
+        camera.position.x += 0.02;
+        camera.position.z += 0.02;
         if (train.position.z > 70) {
             train.position.z = -20;
+            camera.position.x = initCameraPosition.x;
+            camera.position.z = initCameraPosition.z;
         }
     }
 }

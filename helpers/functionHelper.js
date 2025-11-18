@@ -9,7 +9,7 @@ export const enableShadows = (obj) => {
     });
 };
 
-export function clearScene(scene, models, mixers) {
+export function clearScene(scene, models, mixers, camera, controls) {
 
     // Clear Mixers
     mixers.forEach(m => m.uncacheRoot(m.getRoot()));

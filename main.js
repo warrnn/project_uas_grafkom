@@ -7,18 +7,23 @@ let scene, camera, renderer, controls;
 let models = [];
 let mixers = [];
 let sceneAnimator = null;
+const startScene = 9;
 
 function switchScene(sceneID) {
-    clearScene(scene, models, mixers);
+    clearScene(scene, models, mixers, camera, controls);
 
     const selected = SCENE_LIST[sceneID];
     if (!selected) {
-        console.warn(`Scene ${sceneID} tidak ditemukan.`);
+        console.warn(`Scene ${sceneID} not found`);
         return;
     }
 
-    selected.load(scene, models, mixers);
-    sceneAnimator = selected.animate || null;
+    selected.load(scene, models, mixers, camera, controls);
+    sceneAnimator = (delta) => {
+        if (selected.animate) {
+            selected.animate(models, scene, camera, controls, delta);
+        }
+    };
 
     console.log(`Switched to Scene ${sceneID}`);
 }
@@ -26,12 +31,6 @@ function switchScene(sceneID) {
 function init() {
     /* Scene */
     scene = new THREE.Scene();
-    {
-        const color = 0xFFFFFF;
-        const near = 0.1;
-        const far = 1000;
-        scene.fog = new THREE.Fog(color, near, far);
-    }
 
     /* Camera */
     const fov = 45;
@@ -39,7 +38,6 @@ function init() {
     const near = 0.1;
     const far = 5000;
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(0, 84.10459123766272, 316.2332620007179);
 
     /* Renderer */
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -51,10 +49,9 @@ function init() {
     /* Controls */
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
-    controls.target.set(0, 0, 0);
 
     /* Models */
-    switchScene(1);
+    switchScene(startScene);
 
     /* Event Listeners */
     window.addEventListener('resize', onWindowResize);
@@ -100,7 +97,9 @@ function animate() {
 
     lastLog += delta;
     if (lastLog >= 1) {
-        console.log(camera.position);
+        console.log("Camera", camera.position);
+        console.log("Controls", controls.target);
+        
         lastLog = 0;
     }
 
@@ -119,7 +118,7 @@ function animate() {
     }
 
     if (sceneAnimator) {
-        sceneAnimator(models, scene);
+        sceneAnimator(delta);
     }
 
     renderer.render(scene, camera);
