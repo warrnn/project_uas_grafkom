@@ -154,9 +154,16 @@ export function loadScene9(scene, models, mixers, camera, controls) {
 export function loadAnimationScene9(models, scene, camera, controls, delta) {
     const directionalLight = scene.userData.directionalLight;
 
+    camera.position.y += 0.03;
+    camera.position.z -= 0.03;
+
+    controls.target.z -= 0.03;
+
     directionalLight.position.y += 0.2;
 
     if (directionalLight.position.y > 100) {
+        camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
+        controls.target.set(initControlTarget.x, initControlTarget.y, initControlTarget.z);
         directionalLight.position.set(initDirectionalLightPosition.x, initDirectionalLightPosition.y, initDirectionalLightPosition.z);
     }
 }
