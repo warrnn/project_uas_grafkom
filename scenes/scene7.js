@@ -10,6 +10,7 @@ const initCameraPosition = {
     y: 216.8653212232441,
     z: 123.74911888094493
 }
+
 const initControlTarget = {
     x: 56.96193866054978,
     y: 315.0435254510628,
@@ -77,7 +78,7 @@ export function loadScene7(scene, models, mixers, camera, controls) {
 
     const dirHelper = new THREE.DirectionalLightHelper(directionalLight);
     const shadowHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
-    scene.add(dirHelper, shadowHelper);
+    // scene.add(dirHelper, shadowHelper);
 
     scene.userData.directionalLightHelper = dirHelper;
     scene.userData.shadowHelper = shadowHelper;

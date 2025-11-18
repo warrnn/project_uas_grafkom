@@ -6,30 +6,30 @@ import { ColorGUIHelper, FogGUIHelper } from '../helpers/classHelper';
 import { degToRad } from 'three/src/math/MathUtils.js';
 
 const initCameraPosition = {
-    x: -104.58017853321374,
-    y: 70.4597582949414,
-    z: 139.12282531625027
+    x: -30.209606516038775,
+    y: 20.982289502743306,
+    z: -46.32311867601352
 }
 
 const initControlTarget = {
-    x: -16.139746220212395,
-    y: 122.26380292087225,
-    z: 4.8940326643477166
+    x: -23.015565306995814,
+    y: 52.69943287792224,
+    z: -35.4259441512706
 }
 
 const initDirectionalLightPosition = {
-    x: -20,
-    y: -50,
-    z: 100
+    x: 100,
+    y: 0,
+    z: -100
 }
 
-export function loadScene9(scene, models, mixers, camera, controls) {
+export function loadScene10(scene, models, mixers, camera, controls) {
     const loader = new GLTFLoader();
     const gui = new GUI();
 
     /* Fog */
     const fogNear = 0.1;
-    const fogFar = 600;
+    const fogFar = 1000;
     const fogColor = new THREE.Color("rgba(153, 153, 153, 1)");
     scene.fog = new THREE.Fog(fogColor, fogNear, fogFar);
     const fogGUIHelper = new FogGUIHelper(scene.fog);
@@ -49,7 +49,7 @@ export function loadScene9(scene, models, mixers, camera, controls) {
 
     /* Background */
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load('/backgrounds/bg_scene_3.jpg', (texture) => {
+    textureLoader.load('/backgrounds/bg_scene_6.jpg', (texture) => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         scene.background = texture;
     });
@@ -58,7 +58,7 @@ export function loadScene9(scene, models, mixers, camera, controls) {
     const ambientLight = new THREE.AmbientLight("#ffda24", 1);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 5);
     directionalLight.position.set(initDirectionalLightPosition.x, initDirectionalLightPosition.y, initDirectionalLightPosition.z);
     directionalLight.castShadow = true;
     scene.add(directionalLight);
@@ -67,12 +67,12 @@ export function loadScene9(scene, models, mixers, camera, controls) {
     directionalLight.shadow.mapSize.width = 2048;
     directionalLight.shadow.mapSize.height = 2048;
 
-    directionalLight.shadow.camera.near = -500;
-    directionalLight.shadow.camera.far = 500;
-    directionalLight.shadow.camera.left = -500;
-    directionalLight.shadow.camera.right = 500;
-    directionalLight.shadow.camera.top = 500;
-    directionalLight.shadow.camera.bottom = -500;
+    directionalLight.shadow.camera.near = -300;
+    directionalLight.shadow.camera.far = 300;
+    directionalLight.shadow.camera.left = -300;
+    directionalLight.shadow.camera.right = 300;
+    directionalLight.shadow.camera.top = 300;
+    directionalLight.shadow.camera.bottom = -300;
 
     const dirHelper = new THREE.DirectionalLightHelper(directionalLight);
     const shadowHelper = new THREE.CameraHelper(directionalLight.shadow.camera);
@@ -91,7 +91,7 @@ export function loadScene9(scene, models, mixers, camera, controls) {
     dirFolder.addColor(new ColorGUIHelper(directionalLight, 'color'), 'value');
     dirFolder.add(directionalLight, "intensity", 0, 10, 0.1);
     dirFolder.add(directionalLight.position, "x", -100, 100, 0.1);
-    dirFolder.add(directionalLight.position, "y", -100, 100, 0.1);
+    dirFolder.add(directionalLight.position, "y", 0, 200, 0.1);
     dirFolder.add(directionalLight.position, "z", -100, 100, 0.1);
 
     /* 3D Object Loads */
@@ -109,60 +109,45 @@ export function loadScene9(scene, models, mixers, camera, controls) {
     plane.receiveShadow = true;
     scene.add(plane);
 
-    loader.load('/environment/metlife_building.glb', (gltf) => {
+    loader.load('/environment/domes.glb', (gltf) => {
         const model = gltf.scene;
-        model.scale.set(3, 2, 2);
-        model.position.set(-55, 0, 0);
-        enableShadows(model);
-        scene.add(model);
-    }, undefined, onError);
+        model.scale.set(100, 100, 100);
+        model.position.set(0, 0, 0);
 
-    loader.load('/environment/chrysler_building.glb', (gltf) => {
-        const model = gltf.scene;
-        model.scale.set(1.1, 1.1, 1.1);
-        model.position.set(60, 0, 0);
-        enableShadows(model);
-        scene.add(model);
-    }, undefined, onError);
+        // enableShadows(model);
 
-    loader.load('/environment/modern_office_building_2.glb', (gltf) => {
-        const model = gltf.scene;
-        model.scale.set(90, 125, 125);
-        model.position.set(15, 0, 0);
-        model.rotation.y = degToRad(180);
-        enableShadows(model);
-        scene.add(model);
-    }, undefined, onError);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.castShadow = true;
+                child.receiveShadow = true;
 
-    loader.load('/environment/modern_office_building_2.glb', (gltf) => {
-        const model = gltf.scene;
-        model.scale.set(125, 225, 125);
-        model.position.set(60, 0, 80);
-        model.rotation.y = degToRad(90);
-        enableShadows(model);
-        scene.add(model);
-    }, undefined, onError);
+                // Material transparan ATAU nama mesh mengandung kata 'glass'/'window'
+                const isGlass = child.material.transparent === true ||
+                    child.material.opacity < 1.0 ||
+                    child.name.toLowerCase().includes('glass') ||
+                    child.name.toLowerCase().includes('window') ||
+                    child.name.toLowerCase().includes('kaca');
 
-    loader.load('/environment/chrysler_building.glb', (gltf) => {
-        const model = gltf.scene;
-        model.scale.set(1, 0.7, 1);
-        model.position.set(-115, 0, -50);
-        enableShadows(model);
+                if (isGlass) {
+                    child.castShadow = false;
+                    child.material.side = THREE.DoubleSide;
+                    // child.material.depthWrite = false; 
+                }
+            }
+        });
+
         scene.add(model);
     }, undefined, onError);
 }
 
-export function loadAnimationScene9(models, scene, camera, controls, delta) {
+export function loadAnimationScene10(models, scene, camera, controls, delta) {
     const directionalLight = scene.userData.directionalLight;
 
-    camera.position.y += 0.03;
-    camera.position.z -= 0.03;
-
-    controls.target.z -= 0.03;
-
-    directionalLight.position.y += 0.2;
-
-    if (directionalLight.position.y > 100) {
+    camera.position.y += 0.01;
+    controls.target.x -= 0.005;
+    controls.target.y -= 0.01;
+    directionalLight.position.y += 0.35;
+    if (directionalLight.position.y > 120) {
         camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
         controls.target.set(initControlTarget.x, initControlTarget.y, initControlTarget.z);
         directionalLight.position.set(initDirectionalLightPosition.x, initDirectionalLightPosition.y, initDirectionalLightPosition.z);

@@ -10,6 +10,7 @@ const initCameraPosition = {
     y: 1.099841656890988,
     z: 21.36178948596198
 }
+
 const initControlTarget = {
     x: -4.824072559294392,
     y: 4.424200255292551,
