@@ -8,6 +8,7 @@ let models = [];
 let mixers = [];
 let sceneAnimator = null;
 const startScene = 6;
+let isPlaying = false;
 
 function switchScene(sceneID) {
     clearScene(scene, models, mixers, camera, controls);
@@ -58,6 +59,8 @@ function init() {
 
     const input = document.getElementById("scene-input");
     const btn = document.getElementById("scene-btn");
+    const playBtn = document.getElementById("play-btn");
+
     let sceneBtnClicked = 0;
 
     input.max = Object.keys(SCENE_LIST).length;
@@ -79,6 +82,11 @@ function init() {
             switchScene(id);
         };
     });
+
+    playBtn.addEventListener("click", () => {
+        isPlaying = !isPlaying;
+        playBtn.innerText = isPlaying ? "Pause" : "Play";
+    });
 }
 
 function onWindowResize() {
@@ -99,7 +107,7 @@ function animate() {
     if (lastLog >= 1) {
         console.log("Camera", camera.position);
         console.log("Controls", controls.target);
-        
+
         lastLog = 0;
     }
 
@@ -111,15 +119,16 @@ function animate() {
     }
 
     /* Animation */
-    if (mixers.length > 0) {
+    if (isPlaying && mixers.length > 0) {
         for (let i = 0; i < mixers.length; i++) {
             mixers[i].update(delta);
         }
     }
 
-    if (sceneAnimator) {
+    if (sceneAnimator && isPlaying) {
         sceneAnimator(delta);
     }
+
 
     renderer.render(scene, camera);
 }

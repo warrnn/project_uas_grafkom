@@ -109,7 +109,7 @@ export function loadScene6(scene, models, mixers, camera, controls) {
 export function loadAnimationScene6(models, scene, camera, controls, delta) {
     const center = new THREE.Vector3(0, 125, 0);
 
-    const zoomSpeed = 5 * delta;
+    const zoomSpeed = 3 * delta;
     const rotationSpeed = 0.8 * delta;
 
     // Hitung sudut orbit
@@ -150,15 +150,31 @@ export function loadAnimationScene6(models, scene, camera, controls, delta) {
         // Reset
         camera.userData.totalRotation = 0;
 
-        camera.fov = 50;
+        // Reset FOV
+        camera.fov = 45;
         camera.updateProjectionMatrix();
 
-        if (typeof initCameraPosition !== "undefined") {
-            camera.position.copy(initCameraPosition);
-        } else {
-            camera.position.set(0, 20, 100);
-        }
+        // Reset camera position
+        camera.position.set(
+            initCameraPosition.x,
+            initCameraPosition.y,
+            initCameraPosition.z
+        );
 
-        camera.lookAt(center);
+        // Reset controls target
+        controls.target.set(
+            initControlTarget.x,
+            initControlTarget.y,
+            initControlTarget.z
+        );
+        controls.update();
+
+        // Reset lookAt
+        camera.lookAt(
+            initControlTarget.x,
+            initControlTarget.y,
+            initControlTarget.z
+        );
     }
+
 }
