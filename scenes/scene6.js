@@ -110,7 +110,7 @@ export function loadAnimationScene6(models, scene, camera, controls, delta) {
     const center = new THREE.Vector3(0, 125, 0);
 
     const zoomSpeed = 3 * delta;
-    const rotationSpeed = 0.8 * delta;
+    const rotationSpeed = 0.5 * delta;
 
     // Hitung sudut orbit
     let currentAngle = Math.atan2(
@@ -162,11 +162,7 @@ export function loadAnimationScene6(models, scene, camera, controls, delta) {
         );
 
         // Reset controls target
-        controls.target.set(
-            initControlTarget.x,
-            initControlTarget.y,
-            initControlTarget.z
-        );
+        controls.target.copy(center);
         controls.update();
 
         // Reset lookAt
