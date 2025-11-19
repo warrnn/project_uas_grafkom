@@ -107,47 +107,53 @@ export function loadScene6(scene, models, mixers, camera, controls) {
 }
 
 export function loadAnimationScene6(models, scene, camera, controls, delta) {
-    const center = new THREE.Vector3(0, 110, 0);
+    const center = new THREE.Vector3(0, 125, 0);
 
-    const zoomSpeed = 15 * delta;
+    const zoomSpeed = 5 * delta;
     const rotationSpeed = 0.8 * delta;
 
-    let currentRadius = Math.sqrt(
-        Math.pow(camera.position.x - center.x, 2) +
-        Math.pow(camera.position.z - center.z, 2)
-    );
-
+    // Hitung sudut orbit
     let currentAngle = Math.atan2(
         camera.position.x - center.x,
         camera.position.z - center.z
     );
 
-    if (camera.userData.totalRotation === undefined) camera.userData.totalRotation = 0;
+    if (camera.userData.totalRotation === undefined)
+        camera.userData.totalRotation = 0;
 
-    const maxRotation = Math.PI * 2;
+    const maxRotation = Math.PI * 2; // 360°
 
     if (Math.abs(camera.userData.totalRotation) < maxRotation) {
 
-        // Zoom In
-        if (currentRadius > 20) {
-            currentRadius -= zoomSpeed;
+        // Zoom in
+        if (camera.fov > 20) {
+            camera.fov -= zoomSpeed;
+            camera.updateProjectionMatrix();
         }
 
-        // Rotate Orbit
+        // Orbit rotate
         const angleIncrement = rotationSpeed;
         currentAngle += angleIncrement;
         camera.userData.totalRotation += angleIncrement;
 
-        camera.position.x = center.x + currentRadius * Math.sin(currentAngle);
-        camera.position.z = center.z + currentRadius * Math.cos(currentAngle);
+        const radius = Math.sqrt(
+            Math.pow(camera.position.x - center.x, 2) +
+            Math.pow(camera.position.z - center.z, 2)
+        );
+
+        camera.position.x = center.x + radius * Math.sin(currentAngle);
+        camera.position.z = center.z + radius * Math.cos(currentAngle);
 
         camera.lookAt(center);
 
     } else {
-        // Reset ke awal
+        // Reset
         camera.userData.totalRotation = 0;
 
-        if (typeof initCameraPosition !== 'undefined') {
+        camera.fov = 50;
+        camera.updateProjectionMatrix();
+
+        if (typeof initCameraPosition !== "undefined") {
             camera.position.copy(initCameraPosition);
         } else {
             camera.position.set(0, 20, 100);
