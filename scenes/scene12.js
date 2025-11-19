@@ -18,13 +18,17 @@ const initControlTarget = {
 }
 
 const initDirectionalLightPosition = {
-    x: -100,
+    x: 100,
     y: 22.5,
     z: 100
 }
 
 const taxisCount = 10;
 const taxiPosition = generateRandomTaxiPositions(taxisCount);
+
+const npcPosition = [
+
+]
 
 export function loadScene12(scene, models, mixers, camera, controls) {
     const loader = new GLTFLoader();
@@ -174,15 +178,357 @@ export function loadScene12(scene, models, mixers, camera, controls) {
         }, undefined, onError);
     });
 
+    loader.load('/characters/nathan_animated_003_-_walking_3d_man.glb', (gltf) => {
+        const model = gltf.scene;
+        model.scale.set(0.01, 0.01, 0.01);
+
+        const parent = new THREE.Group();
+        parent.add(model);
+        parent.position.set(Math.random() * (20 - 10) + 10, -0.55, 6 + Math.random() * 2);
+        parent.rotation.y = degToRad(Math.random() < 0.5 ? -90 : 90);
+        enableShadows(model);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.material.transparent = true;
+                child.material.opacity = Math.random() * 0.9 + 0.4;
+            }
+        });
+        parent.userData.isNPC = true;
+        parent.userData.spawnX = parent.position.x;
+        parent.userData.spawnY = parent.position.y;
+        parent.userData.spawnZ = parent.position.z;
+        parent.userData.spawnRotate = parent.rotation.y;
+        scene.add(parent);
+        models.push(parent);
+        const mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(gltf.animations, "Take 001");
+        if (clip) {
+            const action = mixer.clipAction(clip);
+            action.timeScale = 2;
+            action.setLoop(THREE.LoopRepeat);
+            action.play();
+        }
+        mixers.push(mixer);
+    }, undefined, onError);
+
+    loader.load('/characters/6e604109b07b4c789776535a8beabf0b.glb', (gltf) => {
+        const model = gltf.scene;
+
+        const parent = new THREE.Group();
+        parent.add(model);
+        parent.position.set(Math.random() * (20 - 10) + 10, -0.55, 6 + Math.random() * 2);
+        parent.rotation.y = degToRad(Math.random() < 0.5 ? -90 : 90);
+        model.scale.set(1, 1, 1);
+        enableShadows(model);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.material.transparent = true;
+                child.material.opacity = Math.random() * 0.9 + 0.4;
+            }
+        });
+        parent.userData.isNPC = true;
+        parent.userData.spawnX = parent.position.x;
+        parent.userData.spawnY = parent.position.y;
+        parent.userData.spawnZ = parent.position.z;
+        parent.userData.spawnRotate = parent.rotation.y;
+        scene.add(parent);
+        models.push(parent);
+        const mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(gltf.animations, "Take 001");
+        if (clip) {
+            const action = mixer.clipAction(clip);
+            action.timeScale = 2;
+            action.setLoop(THREE.LoopRepeat);
+            action.play();
+        }
+        mixers.push(mixer);
+    }, undefined, onError);
+
+    loader.load('/characters/standard_walking.glb', (gltf) => {
+        const model = gltf.scene;
+
+        const parent = new THREE.Group();
+        parent.add(model);
+        parent.position.set(Math.random() * (20 - 10) + 10, -0.6, 6 + Math.random() * 2);
+        parent.rotation.y = degToRad(Math.random() < 0.5 ? -90 : 90);
+        model.scale.set(23, 23, 23);
+        enableShadows(model);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.material.transparent = true;
+                child.material.opacity = Math.random() * 0.9 + 0.4;
+            }
+        });
+        parent.userData.isNPC = true;
+        parent.userData.spawnX = parent.position.x;
+        parent.userData.spawnY = parent.position.y;
+        parent.userData.spawnZ = parent.position.z;
+        parent.userData.spawnRotate = parent.rotation.y;
+        scene.add(parent);
+        models.push(parent);
+        const mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(gltf.animations, "mixamo.com");
+        if (clip) {
+            const action = mixer.clipAction(clip);
+            action.timeScale = 2;
+            action.setLoop(THREE.LoopRepeat);
+            action.play();
+        }
+        mixers.push(mixer);
+    }, undefined, onError);
+
+    loader.load('/characters/walking_girl_cat_walk.glb', (gltf) => {
+        const model = gltf.scene;
+
+        const parent = new THREE.Group();
+        parent.add(model);
+        parent.position.set(Math.random() * (20 - 10) + 10, -0.6, 6 + Math.random() * 2);
+        parent.rotation.y = degToRad(Math.random() < 0.5 ? -90 : 90);
+        model.scale.set(0.6, 0.6, 0.6);
+        enableShadows(model);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.material.transparent = true;
+                child.material.opacity = Math.random() * 0.9 + 0.4;
+            }
+        });
+        parent.userData.isNPC = true;
+        parent.userData.spawnX = parent.position.x;
+        parent.userData.spawnY = parent.position.y;
+        parent.userData.spawnZ = parent.position.z;
+        parent.userData.spawnRotate = parent.rotation.y;
+        scene.add(parent);
+        models.push(parent);
+        const mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(gltf.animations, "Animation");
+        if (clip) {
+            const action = mixer.clipAction(clip);
+            action.timeScale = 2;
+            action.setLoop(THREE.LoopRepeat);
+            action.play();
+        }
+        mixers.push(mixer);
+    }, undefined, onError);
+
+    loader.load('/characters/unarmed_walk_forward_2.glb', (gltf) => {
+        const model = gltf.scene;
+
+        const parent = new THREE.Group();
+        parent.add(model);
+        parent.position.set(Math.random() * (20 - 10) + 10, -0.6, 6 + Math.random() * 2);
+        parent.rotation.y = degToRad(Math.random() < 0.5 ? -90 : 90);
+        model.scale.set(0.5, 0.5, 0.5);
+        enableShadows(model);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.material.transparent = true;
+                child.material.opacity = Math.random() * 0.9 + 0.4;
+            }
+        });
+        parent.userData.isNPC = true;
+        parent.userData.spawnX = parent.position.x;
+        parent.userData.spawnY = parent.position.y;
+        parent.userData.spawnZ = parent.position.z;
+        parent.userData.spawnRotate = parent.rotation.y;
+        scene.add(parent);
+        models.push(parent);
+        const mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(gltf.animations, "mixamo.com");
+        if (clip) {
+            const action = mixer.clipAction(clip);
+            action.timeScale = 2;
+            action.setLoop(THREE.LoopRepeat);
+            action.play();
+        }
+        mixers.push(mixer);
+    }, undefined, onError);
+
+    loader.load('/characters/nathan_animated_003_-_walking_3d_man.glb', (gltf) => {
+        const model = gltf.scene;
+        model.scale.set(0.01, 0.01, 0.01);
+
+        const parent = new THREE.Group();
+        parent.add(model);
+        parent.position.set(Math.random() * (20 - 10) + 10, -0.55, 6 + Math.random() * 2);
+        parent.rotation.y = degToRad(Math.random() < 0.5 ? -90 : 90);
+        enableShadows(model);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.material.transparent = true;
+                child.material.opacity = Math.random() * 0.9 + 0.4;
+            }
+        });
+        parent.userData.isNPC = true;
+        parent.userData.spawnX = parent.position.x;
+        parent.userData.spawnY = parent.position.y;
+        parent.userData.spawnZ = parent.position.z;
+        parent.userData.spawnRotate = parent.rotation.y;
+        scene.add(parent);
+        models.push(parent);
+        const mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(gltf.animations, "Take 001");
+        if (clip) {
+            const action = mixer.clipAction(clip);
+            action.timeScale = 2;
+            action.setLoop(THREE.LoopRepeat);
+            action.play();
+        }
+        mixers.push(mixer);
+    }, undefined, onError);
+
+    loader.load('/characters/6e604109b07b4c789776535a8beabf0b.glb', (gltf) => {
+        const model = gltf.scene;
+
+        const parent = new THREE.Group();
+        parent.add(model);
+        parent.position.set(Math.random() * (20 - 10) + 10, -0.55, 6 + Math.random() * 2);
+        parent.rotation.y = degToRad(Math.random() < 0.5 ? -90 : 90);
+        model.scale.set(1, 1, 1);
+        enableShadows(model);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.material.transparent = true;
+                child.material.opacity = Math.random() * 0.9 + 0.4;
+            }
+        });
+        parent.userData.isNPC = true;
+        parent.userData.spawnX = parent.position.x;
+        parent.userData.spawnY = parent.position.y;
+        parent.userData.spawnZ = parent.position.z;
+        parent.userData.spawnRotate = parent.rotation.y;
+        scene.add(parent);
+        models.push(parent);
+        const mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(gltf.animations, "Take 001");
+        if (clip) {
+            const action = mixer.clipAction(clip);
+            action.timeScale = 2;
+            action.setLoop(THREE.LoopRepeat);
+            action.play();
+        }
+        mixers.push(mixer);
+    }, undefined, onError);
+
+    loader.load('/characters/standard_walking.glb', (gltf) => {
+        const model = gltf.scene;
+
+        const parent = new THREE.Group();
+        parent.add(model);
+        parent.position.set(Math.random() * (20 - 10) + 10, -0.6, 6 + Math.random() * 2);
+        parent.rotation.y = degToRad(Math.random() < 0.5 ? -90 : 90);
+        model.scale.set(23, 23, 23);
+        enableShadows(model);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.material.transparent = true;
+                child.material.opacity = Math.random() * 0.9 + 0.4;
+            }
+        });
+        parent.userData.isNPC = true;
+        parent.userData.spawnX = parent.position.x;
+        parent.userData.spawnY = parent.position.y;
+        parent.userData.spawnZ = parent.position.z;
+        parent.userData.spawnRotate = parent.rotation.y;
+        scene.add(parent);
+        models.push(parent);
+        const mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(gltf.animations, "mixamo.com");
+        if (clip) {
+            const action = mixer.clipAction(clip);
+            action.timeScale = 2;
+            action.setLoop(THREE.LoopRepeat);
+            action.play();
+        }
+        mixers.push(mixer);
+    }, undefined, onError);
+
+    loader.load('/characters/walking_girl_cat_walk.glb', (gltf) => {
+        const model = gltf.scene;
+
+        const parent = new THREE.Group();
+        parent.add(model);
+        parent.position.set(Math.random() * (20 - 10) + 10, -0.6, 6 + Math.random() * 2);
+        parent.rotation.y = degToRad(Math.random() < 0.5 ? -90 : 90);
+        model.scale.set(0.6, 0.6, 0.6);
+        enableShadows(model);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.material.transparent = true;
+                child.material.opacity = Math.random() * 0.9 + 0.4;
+            }
+        });
+        parent.userData.isNPC = true;
+        parent.userData.spawnX = parent.position.x;
+        parent.userData.spawnY = parent.position.y;
+        parent.userData.spawnZ = parent.position.z;
+        parent.userData.spawnRotate = parent.rotation.y;
+        scene.add(parent);
+        models.push(parent);
+        const mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(gltf.animations, "Animation");
+        if (clip) {
+            const action = mixer.clipAction(clip);
+            action.timeScale = 2;
+            action.setLoop(THREE.LoopRepeat);
+            action.play();
+        }
+        mixers.push(mixer);
+    }, undefined, onError);
+
+    loader.load('/characters/unarmed_walk_forward_2.glb', (gltf) => {
+        const model = gltf.scene;
+
+        const parent = new THREE.Group();
+        parent.add(model);
+        parent.position.set(Math.random() * (20 - 10) + 10, -0.6, 6 + Math.random() * 2);
+        parent.rotation.y = degToRad(Math.random() < 0.5 ? -90 : 90);
+        model.scale.set(0.5, 0.5, 0.5);
+        enableShadows(model);
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.material.transparent = true;
+                child.material.opacity = Math.random() * 0.9 + 0.4;
+            }
+        });
+        parent.userData.isNPC = true;
+        parent.userData.spawnX = parent.position.x;
+        parent.userData.spawnY = parent.position.y;
+        parent.userData.spawnZ = parent.position.z;
+        parent.userData.spawnRotate = parent.rotation.y;
+        scene.add(parent);
+        models.push(parent);
+        const mixer = new THREE.AnimationMixer(model);
+        const clip = THREE.AnimationClip.findByName(gltf.animations, "mixamo.com");
+        if (clip) {
+            const action = mixer.clipAction(clip);
+            action.timeScale = 2;
+            action.setLoop(THREE.LoopRepeat);
+            action.play();
+        }
+        mixers.push(mixer);
+    }, undefined, onError);
 }
 
 export function loadAnimationScene12(models, scene, camera, controls, delta) {
-    const taxis = models
+    const taxis = models.filter((model) => !model.userData.isNPC);
+    const npc = models.filter((model) => model.userData.isNPC === true);
+    const directionalLight = scene.userData.directionalLight;
+
+    camera.position.x += 0.05;
+    controls.target.x += 0.05;
+    directionalLight.position.x -= 1;
+
+    if (camera.position.x >= 25) {
+        camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
+        controls.target.set(initControlTarget.x, initControlTarget.y, initControlTarget.z);
+        directionalLight.position.set(initDirectionalLightPosition.x, initDirectionalLightPosition.y, initDirectionalLightPosition.z);
+    }
 
     if (taxis.length < taxisCount) return;
 
     taxis.forEach((taxi, index) => {
         const speed = 0.4 + index * 0.1;
+
         if (taxi.rotation.y === 0) {
             taxi.position.x += speed;
         } else {
@@ -200,6 +546,34 @@ export function loadAnimationScene12(models, scene, camera, controls, delta) {
                     child.material.opacity = newPos.opacity;
                 }
             });
+        }
+    });
+
+    npc.forEach((person) => {
+        const npcSpeed = 0.2;
+
+        if (!person.userData.spawnSaved) {
+            person.userData.spawnX = person.position.x;
+            person.userData.spawnY = person.position.y;
+            person.userData.spawnZ = person.position.z;
+            person.userData.spawnRotate = person.rotation.y;
+            person.userData.spawnSaved = true;
+        }
+
+        if (Math.abs(person.rotation.y - (-Math.PI / 2)) < 0.01) {
+            person.position.x -= npcSpeed;
+        }
+        else if (Math.abs(person.rotation.y - (Math.PI / 2)) < 0.01) {
+            person.position.x += npcSpeed;
+        }
+
+        if (person.position.x < 5 || person.position.x > 30) {
+            person.position.set(
+                person.userData.spawnX,
+                person.userData.spawnY,
+                person.userData.spawnZ
+            );
+            person.rotation.y = person.userData.spawnRotate;
         }
     });
 }
