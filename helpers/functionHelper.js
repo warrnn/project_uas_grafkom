@@ -79,3 +79,50 @@ export function clearScene(scene, models, mixers, camera, controls) {
     }
 }
 
+export function generateRandomTaxiPositions(count) {
+    const positions = [];
+
+    const half = Math.floor(count / 2);
+    const remainder = count % 2;
+
+    // --- 50% z list ---
+    const zList = [
+        ...Array(half).fill(-1.5),
+        ...Array(half).fill(3.5),
+    ];
+
+    // Jika ganjil, 1 random
+    if (remainder === 1) {
+        zList.push(Math.random() < 0.5 ? -1.5 : 3.5);
+    }
+
+    // --- 50% opacity list ---
+    const opacityList = [
+        ...Array(half).fill(1.0),
+        ...Array(half).fill(0.5),
+    ];
+
+    if (remainder === 1) {
+        opacityList.push(Math.random() < 0.5 ? 1.0 : 0.5);
+    }
+
+    // Acak kedua list agar tidak berurutan
+    zList.sort(() => Math.random() - 0.5);
+    opacityList.sort(() => Math.random() - 0.5);
+
+    for (let i = 0; i < count; i++) {
+        const z = zList[i];
+        const opacity = opacityList[i];
+        const rotate = opacity === 1.0 ? 0 : 180;
+
+        positions.push({
+            x: parseFloat((Math.random() * 20).toFixed(2)),
+            y: -0.7,
+            z,
+            rotate,
+            opacity,
+        });
+    }
+
+    return positions;
+}

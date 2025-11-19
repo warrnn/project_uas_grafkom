@@ -7,7 +7,7 @@ let scene, camera, renderer, controls;
 let models = [];
 let mixers = [];
 let sceneAnimator = null;
-const startScene = 6;
+const startScene = 12;
 let isPlaying = false;
 
 function switchScene(sceneID) {
@@ -59,7 +59,6 @@ function init() {
 
     const input = document.getElementById("scene-input");
     const btn = document.getElementById("scene-btn");
-    const playBtn = document.getElementById("play-btn");
 
     let sceneBtnClicked = 0;
 
@@ -83,9 +82,11 @@ function init() {
         };
     });
 
-    playBtn.addEventListener("click", () => {
-        isPlaying = !isPlaying;
-        playBtn.innerText = isPlaying ? "Pause" : "Play";
+    window.addEventListener("keydown", (e) => {
+        if (e.code == "Space") {
+            e.preventDefault();
+            isPlaying = !isPlaying;
+        }
     });
 }
 

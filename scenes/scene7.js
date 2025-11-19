@@ -124,10 +124,15 @@ export function loadAnimationScene7(models, scene, camera, controls, delta) {
     const ambientLight = scene.userData.ambientLight;
     const directionalLight = scene.userData.directionalLight;
 
+    camera.position.x += 0.1;
+    controls.target.x -= 0.1;
+    controls.target.y -= 0.05;
     ambientLight.color.g += 0.001;
     ambientLight.color.b += 0.001;
     directionalLight.position.z += 0.3;
     if (directionalLight.position.z >= 100) {
+        camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
+        controls.target.set(initControlTarget.x, initControlTarget.y, initControlTarget.z);
         ambientLight.color.set(`rgb(${initAmbientLightColor.r}, ${initAmbientLightColor.g}, ${initAmbientLightColor.b})`);
         directionalLight.position.z = initDirectionalLightPosition.z;
     }
