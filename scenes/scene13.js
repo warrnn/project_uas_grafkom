@@ -177,7 +177,7 @@ export function loadScene13(scene, models, mixers, camera, controls) {
 export function loadAnimationScene13(models, scene, camera, controls, delta) {
     const directionalLight = scene.userData.directionalLight;
 
-    directionalLight.position.y -= 0.5;
+    directionalLight.position.y -= 0.4;
     directionalLight.position.z += 0.3;
 
     camera.position.x += 0.1;

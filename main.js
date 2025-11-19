@@ -7,7 +7,7 @@ let scene, camera, renderer, controls;
 let models = [];
 let mixers = [];
 let sceneAnimator = null;
-const startScene = 13;
+const startScene = 14;
 let isPlaying = false;
 
 function switchScene(sceneID) {
