@@ -151,18 +151,18 @@ export function loadScene14(scene, models, mixers, camera, controls) {
     }, undefined, onError);
 }
 
-let scene14Timer = 0;
+let sceneTimer = 0;
 
 export function loadAnimationScene14(models, scene, camera, controls, delta) {
-    scene14Timer += delta;
+    sceneTimer += delta;
 
     camera.position.z += 0.001;
     controls.target.z -= 0.003;
 
-    if (scene14Timer >= 6) {
+    if (sceneTimer >= 6) {
         camera.position.set(initCameraPosition.x, initCameraPosition.y, initCameraPosition.z);
         controls.target.set(initControlTarget.x, initControlTarget.y, initControlTarget.z);
 
-        scene14Timer = 0;
+        sceneTimer = 0;
     }
 }
