@@ -12,6 +12,7 @@ import { loadAnimationScene11, loadScene11 } from "./scene11";
 import { loadAnimationScene12, loadScene12 } from "./scene12";
 import { loadAnimationScene13, loadScene13 } from "./scene13";
 import { loadAnimationScene14, loadScene14 } from "./scene14";
+import { loadAnimationScene15, loadScene15 } from "./scene15";
 
 export const SCENE_LIST = {
     1: { load: loadScene1, animate: loadAnimationScene1 },
@@ -28,4 +29,5 @@ export const SCENE_LIST = {
     12: { load: loadScene12, animate: loadAnimationScene12 },
     13: { load: loadScene13, animate: loadAnimationScene13 },
     14: { load: loadScene14, animate: loadAnimationScene14 },
+    15: { load: loadScene15, animate: loadAnimationScene15 },
 };
